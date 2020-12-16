@@ -9,4 +9,3 @@ Redirect 302 /mygit https://github.com/WEBDEVLOVE20/AFS-205
 #Errors
 
 ErrorDocument 404 /404.html
-ErrorDocument 500 /500.html
