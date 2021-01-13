@@ -1,0 +1,49 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -f docker-compose.yml -o ./.k8s
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: node
+  name: node
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: node
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -f docker-compose.yml -o ./.k8s
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/fsw205-network: "true"
+        io.kompose.service: node
+    spec:
+      containers:
+        - env:
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  key: NODE_ENV
+                  name: docker-env-app-production-env
+          image: fsw205/node-fsw205
+          name: node-fsw205
+          ports:
+            - containerPort: 8080
+          resources: {}
+          volumeMounts:
+            - mountPath: /var/www/fsw205
+              name: node-claim0
+          workingDir: /var/www/fsw205
+      restartPolicy: Always
+      volumes:
+        - name: node-claim0
+          persistentVolumeClaim:
+            claimName: node-claim0
+status: {}
